@@ -34,15 +34,15 @@ OptionParser.new do |opts|
   end
   
   opts.on("--fetch-class=RUBY_CLASS", "Must implement fetch(uri, user_agent_string) #=> file_object") do |c|
-    options[:storage_class] = c
+    options[:fetch_class] = c
   end
   
-  opts.on("--storage-class=RUBY_CLASS", "Must implement put(key_string, temp_file) and get()") do |c|
-    options[:storage_class] = c
+  opts.on("--store-class=RUBY_CLASS", "Must implement put(key_string, temp_file)") do |c|
+    options[:store_class] = c
   end
   
-  opts.on("--storage-class=RUBY_CLASS", "Must implement put(key_string, temp_file)") do |c|
-    options[:dupe_class] = c
+  opts.on("--dupes-class=RUBY_CLASS", "Must implement dupe?(uri)") do |c|
+    options[:dupes_class] = c
   end
   
   opts.on("--queue-class=RUBY_CLASS", "Must implement put(key_string, depth_int) and get() #=> [key_string, depth_int]") do |c|
@@ -51,6 +51,14 @@ OptionParser.new do |opts|
   
   opts.on("--links-class=RUBY_CLASS", "Must implement urls(base_uri, temp_file) #=> [uri, ...]") do |c|
     options[:links_class] = c
+  end
+  
+  opts.on("-Q", "--quota=NUMBER", "set retrieval quota to NUMBER.") do |q|
+    options[:quota] = q.to_i
+  end
+  
+  opts.on("-l", "--level=NUMBER", "maximum recursion depth (inf or 0 for infinite).") do |l|
+    options[:depth] = l.to_i
   end
   
   opts.on("--[no-]timestampize", "Prepend the timestamp of when the crawl started to the directory structure.") do |t|
