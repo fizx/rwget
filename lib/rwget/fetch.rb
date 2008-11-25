@@ -10,6 +10,7 @@ class RWGet::Fetch
     tmp = nil
     Tempfile.open("rwget-fetch") do |file|
       file.print(io.read)
+      tmp = file
     end
     tmp
   rescue Exception => e 

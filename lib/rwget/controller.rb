@@ -4,11 +4,17 @@ class RWGet::Controller
   def initialize(options)
     @options = options
     @options[:user_agent] ||= "Ruby/Wget" 
-    @queue = options[:queue_class] ? Kernel.const_get(options[:queue_class]) : Queue.new
-    @fetch = options[:fetch_class] ? Kernel.const_get(options[:fetch_class]) : Fetch.new
-    @store = options[:store_class] ? Kernel.const_get(options[:store_class]) : Store.new
-    @links = options[:links_class] ? Kernel.const_get(options[:links_class]) : Links.new
-    @dupes = options[:dupes_class] ? Kernel.const_get(options[:dupes_class]) : Dupes.new
+    
+    %w[quota depth wait].each do |key|
+      key = key.to_sym
+      @options[key] = @options[key].to_i
+    end
+    
+    @queue = options[:queue_class] ? Kernel.const_get(options[:queue_class]) : RWGet::Queue.new
+    @fetch = options[:fetch_class] ? Kernel.const_get(options[:fetch_class]) : RWGet::Fetch.new
+    @store = options[:store_class] ? Kernel.const_get(options[:store_class]) : RWGet::Store.new
+    @links = options[:links_class] ? Kernel.const_get(options[:links_class]) : RWGet::Links.new
+    @dupes = options[:dupes_class] ? Kernel.const_get(options[:dupes_class]) : RWGet::Dupes.new
   end
   
   def start
@@ -27,15 +33,22 @@ class RWGet::Controller
       end
       
       uri = URI.parse(url)
-      ua = options[:user_agent] || "Ruby/Wget"
-      tmpfile = @fetch.fetch(uri, ua)
+      
+      puts "downloading #{uri}"
+      tmpfile = @fetch.fetch(uri, options[:user_agent])
       
       if tmpfile
+        downloaded += tmpfile.size
+        puts "parsing links"
         @links.urls(uri, tmpfile).each do |link|
-          @queue.put(link) unless @dupes.dupe?(link)
+          @queue.put(link, depth + 1) unless @dupes.dupe?(link)
         end
-        @store.put(key_for(uri), tmpfile)
-        downloaded += 1
+        key = key_for(uri)
+        puts "storing at #{key}"
+        @store.put(key, tmpfile)
+        sleep options[:wait]
+      else
+        puts "unable to download"
       end
     end
   end

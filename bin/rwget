@@ -55,6 +55,8 @@ OptionParser.new do |opts|
   
   opts.on("-Q", "--quota=NUMBER", "set retrieval quota to NUMBER.") do |q|
     options[:quota] = q.to_i
+    options[:quota] *= 1000 if q =~ /k/i
+    options[:quota] *= 1000000 if q =~ /m/i
   end
   
   opts.on("-l", "--level=NUMBER", "maximum recursion depth (inf or 0 for infinite).") do |l|
