@@ -1,0 +1,85 @@
+#!/usr/bin/env ruby
+require 'optparse'
+require File.dirname(__FILE__) + "/../lib/rwget"
+
+options = {}
+usage = "Usage: #{$0} [options] SEED_URL [SEED_URL2 ...]"
+OptionParser.new do |opts|
+  opts.banner = usage
+  
+  opts.on("-w", "--wait=SECONDS", "wait SECONDS between retrievals.") do |w|
+    options[:wait] = w.to_i
+  end
+  
+  opts.on("-P", "--directory-prefix=PREFIX", "save files to PREFIX/...") do |p|
+    options[:prefix] = p
+  end
+  
+  opts.on("-U", "--user-agent=AGENT", "identify as AGENT instead of RWget/VERSION.") do |u|
+    options[:user_agent] = u
+  end
+
+  opts.on("--accept-pattern=RUBY_REGEX", "URLs must match RUBY_REGEX to be saved to the queue.") do |r|
+    options[:accept_patterns] ||= []
+    options[:accept_patterns] << Regexp.new(r)
+  end
+  
+  opts.on("--reject-pattern=RUBY_REGEX", "URLs must NOT match RUBY_REGEX to be saved to the queue.") do |r|
+    options[:reject_patterns] ||= []
+    options[:reject_patterns] << Regexp.new(r)
+  end
+
+  opts.on("--require=RUBY_SCRIPT", "Will execute 'require RUBY_SCRIPT'") do |s|
+    require s
+  end
+  
+  opts.on("--fetch-class=RUBY_CLASS", "Must implement fetch(uri, user_agent_string) #=> file_object") do |c|
+    options[:storage_class] = c
+  end
+  
+  opts.on("--storage-class=RUBY_CLASS", "Must implement put(key_string, temp_file) and get()") do |c|
+    options[:storage_class] = c
+  end
+  
+  opts.on("--storage-class=RUBY_CLASS", "Must implement put(key_string, temp_file)") do |c|
+    options[:dupe_class] = c
+  end
+  
+  opts.on("--queue-class=RUBY_CLASS", "Must implement put(key_string, depth_int) and get() #=> [key_string, depth_int]") do |c|
+    options[:queue_class] = c
+  end
+  
+  opts.on("--links-class=RUBY_CLASS", "Must implement urls(base_uri, temp_file) #=> [uri, ...]") do |c|
+    options[:links_class] = c
+  end
+  
+  opts.on("--[no-]timestampize", "Prepend the timestamp of when the crawl started to the directory structure.") do |t|
+    options[:timestampize] = t
+  end
+  
+  opts.on("--protocol-directories", "use protocol name in directories.") do |p|
+    options[:protocol_directories] = p
+  end
+  
+  opts.on("-nH", "--no-host-directories", "don't create host directories.") do |h|
+    options[:no_host_directories] = h
+  end
+  
+  opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+    options[:verbose] = v
+  end
+  
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end.parse!
+
+options[:seeds] = ARGV
+if options[:seeds].empty?
+  puts usage
+  puts "    -h for options listing"
+  exit(1) 
+end
+
+RWGet::Controller.new(options).start
