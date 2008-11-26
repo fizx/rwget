@@ -8,7 +8,8 @@ class FetchTest < Test::Unit::TestCase
   def setup
     @tmp = File.dirname(__FILE__) + "/tmp"
     mkdir_p @tmp
-    @store = RWGet::Store.new(@tmp)
+    @store = RWGet::Store.new
+    @store.root = @tmp
   end
   
   def teardown

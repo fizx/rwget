@@ -1,6 +1,6 @@
 require "tempfile"
 class RWGet::Queue
-  def initialize
+  def initialize(options = {})
     @writer = Tempfile.new("rwget-queue")
     @reader = File.open(@writer.path, "r")
     @dirty = false

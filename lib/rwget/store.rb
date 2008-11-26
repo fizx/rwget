@@ -2,8 +2,10 @@ require "fileutils"
 class RWGet::Store
   include FileUtils
   
-  def initialize(root = ".")
-    @root = root
+  attr_accessor :root
+  
+  def initialize(options = {})
+    @root = "."
   end
   
   def put(key, tmpfile)

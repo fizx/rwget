@@ -5,7 +5,7 @@ require "bloomfilter"
 class RWGet::Dupes  
   SIZE = 1_000_000
   
-  def initialize
+  def initialize(options = {})
     @tmp = Tempfile.new("bloom")
     @bloom = ExternalBloomFilter.create(@tmp.path, SIZE)
   end
