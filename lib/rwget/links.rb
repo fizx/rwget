@@ -5,21 +5,29 @@ class RWGet::Links
   end
   
   def urls(base, tmpfile)
-    urls = []
+    @urls = []
     base = base.to_s
-    doc = Hpricot(File.read(tmpfile.path))
-    (doc / "a").each do |a| 
-      begin
-        if href = a.attributes["href"]
-          urls << URI.join(base, href.strip)       
-        end
-      rescue Exception => e
-        STDERR.puts "url error parsing URI.join(#{base.inspect}, #{href.inspect}): #{e.message}"
-      end   
+    string = File.read(tmpfile.path)
+    xml = string =~ /<\?xml/
+    doc = xml ? Hpricot.XML(string) : Hpricot(string)
+    
+    (doc / "//item/link").each do |l|
+      add base, l.inner_text
     end
-    urls
+    (doc / "a").each do |a| 
+      add base, a.attributes["href"]
+    end
+    @urls
   rescue Exception => e
     STDERR.puts "Couldn't parse #{base} for links: #{e.message}"
-    nil
+    []
+  end
+  
+  def add(base, href)
+    begin
+      @urls << URI.join(base, href.strip) if href
+    rescue Exception => e
+      STDERR.puts "url error parsing URI.join(#{base.inspect}, #{href.inspect}): #{e.message}"
+    end
   end
 end

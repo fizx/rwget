@@ -9,7 +9,7 @@ class RWGet::Controller
     @options[:accept_patterns] ||= []
     @options[:reject_patterns] ||= []
         
-    %w[quota depth wait limit_rate].each do |key|
+    %w[quota depth wait limit_rate time_limit].each do |key|
       key = key.to_sym
       @options[key] = @options[key].to_i
     end
@@ -31,7 +31,9 @@ class RWGet::Controller
     end
     
     downloaded = 0
-    while (options[:quota] == 0 || downloaded < options[:quota]) 
+    while (options[:quota] == 0 || downloaded < options[:quota]) && 
+          (options[:time_limit] == 0 || Time.now - @start < options[:time_limit]) 
+  
       url, depth = @queue.get
       
       unless url
@@ -58,7 +60,13 @@ class RWGet::Controller
         downloaded += File.size(tmpfile.path)
         puts "parsing links"
         @links.urls(effective_url, tmpfile).each do |link|
-          @queue.put(link, depth + 1) if legal?(link) && !@dupes.dupe?(link)
+          legal = legal?(link)
+          dupe = @dupes.dupe?(link)
+          puts "dupe: #{link}" if dupe
+          if legal && !dupe
+            puts "adding link: #{link}"
+            @queue.put(link, depth + 1)
+          end 
         end
         key = key_for(uri)
         puts "storing at #{key}"
@@ -66,16 +74,23 @@ class RWGet::Controller
         sleep options[:wait]
       else
         puts "unable to download"
-      end
+      end  
     end
+    puts "hit time/quota"
   end
   
   def legal?(link)
-    options[:span_hosts] || @original_hosts.include?(link.host)
+    unless options[:span_hosts] || @original_hosts.include?(link.host)
+      puts "can't span hosts: #{link}"
+      return false 
+    end
     link = link.to_s
     legal = options[:accept_patterns].empty?
+    puts "accepted by default: #{link}" if legal
     legal ||= options[:accept_patterns].any?{|p| link =~ p}
+    puts "not in accept patterns: #{link}" if !legal
     rejected = options[:reject_patterns].any?{|p| link =~ p}
+    puts "in reject patterns: #{link}" if rejected
     legal && !rejected
   end
   

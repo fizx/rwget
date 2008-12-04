@@ -23,6 +23,14 @@ OptionParser.new do |opts|
     options[:accept_patterns] ||= []
     options[:accept_patterns] << Regexp.new(r)
   end
+
+  opts.on("--time-limit=AMOUNT", "Crawler will stop after this AMOUNT of time has passed.") do |t|
+    options[:time_limit] = t.to_i
+    options[:time_limit] *= 60 if t =~ /m/i
+    options[:time_limit] *= 60 * 60 if t =~ /h/i
+    options[:time_limit] *= 60 * 60 * 24 if t =~ /d/i
+    options[:time_limit] *= 60 * 60 * 24 * 7 if t =~ /w/i
+  end
   
   opts.on("-Rp", "--reject-pattern=RUBY_REGEX", "URLs must NOT match RUBY_REGEX to be saved to the queue.") do |r|
     options[:reject_patterns] ||= []
@@ -107,11 +115,15 @@ OptionParser.new do |opts|
     options[:timestampize] = t
   end
   
+  opts.on("--incremental-from=PREVIOUS", "Build upon the indexing already saved in PREVIOUS.") do |r|
+    options[:incremental_from] = r
+  end
+  
   opts.on("--protocol-directories", "use protocol name in directories.") do |p|
     options[:protocol_directories] = p
   end
   
-  opts.on("-nH", "--no-host-directories", "don't create host directories.") do |h|
+  opts.on("--no-host-directories", "don't create host directories.") do |h|
     options[:no_host_directories] = h
   end
   

@@ -2,7 +2,7 @@ Gem::Specification.new do |s|
   s.name     = "rwget"
   s.bindir   = "bin"
   s.executables = 'rwget'
-  s.version  = "0.2.0"
+  s.version  = "0.2.2"
   s.date     = "2008-04-24"
   s.summary  = "rwget"
   s.email    = "kyle@kylemaxwell.com"
