@@ -39,3 +39,17 @@ RWget is a web crawler that tries to emulate a subset of the interface of GNU/Wg
         -v, --[no-]verbose               Run verbosely
         -h, --help                       Show this message
 
+## Ruby API
+
+    require "rubygems"
+    require "rwget"
+    
+    # options is the same as the command-line long options, but converted into
+    # idiomatic ruby.  See the RDoc for details.
+    # i.e. 
+    # sh$ rwget -T 5 -A ".*foo.*" http://google.com
+    # becomes:
+    # irb$ RWGet::Controller.new({:seeds => ["http://google.com"], 
+    #            :timeout => 5, :accept_patterns => /.*foo.*/}).start
+    
+    RWGet::Controller.new(options).start
