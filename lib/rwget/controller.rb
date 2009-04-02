@@ -105,4 +105,10 @@ class RWGet::Controller
     paths.push "index.html"     unless paths.last.to_s =~ /\.|\?/
     File.join(arr + paths)
   end
+  
+  def close
+    [@queue, @fetch, @store, @links, @dupes].each do |obj|
+      obj.close if obj.respond_to?(:close)
+    end
+  end
 end

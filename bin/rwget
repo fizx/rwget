@@ -10,4 +10,6 @@ if parser.options[:seeds].empty?
   exit(1) 
 end
 
-RWGet::Controller.new(parser.options).start
+controller = RWGet::Controller.new(parser.options)
+controller.start
+controller.close
