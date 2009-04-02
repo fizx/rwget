@@ -8,7 +8,6 @@ class RWGet::Fetch
   DEFAULT_REDIRECTS = 30
   
   def initialize(options = {})
-    Loggable.default.level = Logger::INFO
     @robots = {}
     @curl = Curl::Easy.new
     @curl.connect_timeout = options[:connect_timeout] || DEFAULT_TIMEOUT
