@@ -38,7 +38,7 @@ class RWGet::Controller
       
       unless url
         puts "no more urls"
-        exit
+        return
       end
       
       if options[:depth] > 0 && depth >= options[:depth]

@@ -35,6 +35,7 @@ class RWGet::Fetch
     @curl.perform
     tmp = nil
     Tempfile.open("curl") {|file| file.print(@curl.body_str); tmp = file }
+    tmp.open
     [@curl.last_effective_url, tmp]
   rescue Exception => e 
     STDERR.puts "#{uri} not retrieved: #{e.message}"
