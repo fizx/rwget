@@ -38,10 +38,10 @@ class RWGet::Controller
       
       unless url
         puts "no more urls"
-        exit
+        return
       end
       
-      if options[:depth] > 0 && depth >= options[:depth]
+      if options[:depth] > 0 && depth > options[:depth]
         next 
       end
       
@@ -102,7 +102,6 @@ class RWGet::Controller
     arr << uri.host             unless options[:no_host_directories]
     paths = uri.path.split("/")
     paths.shift                 if paths.first.to_s.empty?
-    paths.push "index.html"     unless paths.last.to_s =~ /\.|\?/
     File.join(arr + paths)
   end
   
