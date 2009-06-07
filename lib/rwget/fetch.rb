@@ -33,10 +33,10 @@ class RWGet::Fetch
     @curl.headers["User-Agent"] = user_agent
     @curl.url = uri.to_s
     @curl.perform
-    file = nil
-    Tempfile.open("curl") {|tmp| tmp.print(@curl.body_str); file = tmp}
-    file.open
-    [@curl.last_effective_url, file]
+    tmp = nil
+    Tempfile.open("curl") {|file| file.print(@curl.body_str); tmp = file }
+    tmp.open
+    [@curl.last_effective_url, tmp]
   rescue Exception => e 
     STDERR.puts "#{uri} not retrieved: #{e.message}"
     nil
