@@ -26,6 +26,8 @@ RWget is a web crawler that tries to emulate a subset of the interface of GNU/Wg
             --dupes-class=RUBY_CLASS     Must implement dupe?(uri)
             --queue-class=RUBY_CLASS     Must implement put(key_string, depth_int) and get() #=> [key_string, depth_int]
             --links-class=RUBY_CLASS     Must implement urls(base_uri, temp_file) #=> [uri, ...]
+        -S, --sitemap=URL                URL of a sitemap to crawl (will ignore inter-page links)
+
         -Q, --quota=NUMBER               set retrieval quota to NUMBER.
             --max-redirect=NUM           maximum redirections allowed per page.
         -H, --span-hosts                 go to foreign hosts when recursive

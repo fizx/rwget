@@ -2,6 +2,12 @@ require "set"
 class RWGet::Controller
   attr_reader :options
   
+  def self.resolve_class(string)
+    string.split("::").inject(Kernel) do |const, string|
+      const.const_get(string)
+    end
+  end
+  
   def initialize(options)
     @options = options
     @options[:user_agent] ||= "Ruby/Wget" 
@@ -14,11 +20,11 @@ class RWGet::Controller
       @options[key] = @options[key].to_i
     end
     
-    @queue = (options[:queue_class] ? Kernel.const_get(options[:queue_class]) : RWGet::Queue).new(options)
-    @fetch = (options[:fetch_class] ? Kernel.const_get(options[:fetch_class]) : RWGet::Fetch).new(options)
-    @store = (options[:store_class] ? Kernel.const_get(options[:store_class]) : RWGet::Store).new(options)
-    @links = (options[:links_class] ? Kernel.const_get(options[:links_class]) : RWGet::Links).new(options)
-    @dupes = (options[:dupes_class] ? Kernel.const_get(options[:dupes_class]) : RWGet::Dupes).new(options)
+    @queue = (options[:queue_class] ? self.class.resolve_class(options[:queue_class]) : RWGet::Queue).new(options)
+    @fetch = (options[:fetch_class] ? self.class.resolve_class(options[:fetch_class]) : RWGet::Fetch).new(options)
+    @store = (options[:store_class] ? self.class.resolve_class(options[:store_class]) : RWGet::Store).new(options)
+    @links = (options[:links_class] ? self.class.resolve_class(options[:links_class]) : RWGet::Links).new(options)
+    @dupes = (options[:dupes_class] ? self.class.resolve_class(options[:dupes_class]) : RWGet::Dupes).new(options)
   end
   
   def start

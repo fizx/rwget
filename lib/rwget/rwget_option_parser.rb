@@ -97,6 +97,11 @@ class RWGetOptionParser < OptionParser
       opts.on("--links-class=RUBY_CLASS", "Must implement urls(base_uri, temp_file) #=> [uri, ...]") do |c|
         options[:links_class] = c
       end
+      
+      opts.on("-S", "--sitemap=URL", "URL of a sitemap to crawl (will ignore inter-page links)") do |url|
+        options[:seeds] << url
+        options[:links_class] = "RWGet::SitemapLinks"
+      end
   
       opts.on("-Q", "--quota=NUMBER", "set retrieval quota to NUMBER.") do |q|
         options[:quota] = q.to_i
