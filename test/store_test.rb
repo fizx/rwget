@@ -2,7 +2,7 @@ require "test/unit"
 require "fileutils"
 require File.dirname(__FILE__) + "/../lib/rwget"
 
-class FetchTest < Test::Unit::TestCase
+class StoreTest < Test::Unit::TestCase
   include FileUtils
   
   def setup
@@ -21,7 +21,7 @@ class FetchTest < Test::Unit::TestCase
     file.puts "hello"
     file.close
     @store.put("foo/bar", file)
-    new_path = File.join(@tmp, "foo/bar")
+    new_path = File.join(@tmp, "foo/bar", "index.html")
     assert File.exists?(new_path)
     assert File.read(new_path) =~ /hello/
   end
