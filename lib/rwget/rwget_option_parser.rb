@@ -9,7 +9,8 @@ class RWGetOptionParser < OptionParser
   
   def parse!
     super
-    options[:seeds] = ARGV
+    options[:seeds] ||= []
+    options[:seeds] += ARGV
   end
   
   def initialize
@@ -99,6 +100,7 @@ class RWGetOptionParser < OptionParser
       end
       
       opts.on("-S", "--sitemap=URL", "URL of a sitemap to crawl (will ignore inter-page links)") do |url|
+        options[:seeds] ||= []
         options[:seeds] << url
         options[:links_class] = "RWGet::SitemapLinks"
       end
