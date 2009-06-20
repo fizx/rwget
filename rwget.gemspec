@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rwget}
-  s.version = "0.4.0"
+  s.version = "0.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Kyle Maxwell"]
@@ -14,8 +14,10 @@ Gem::Specification.new do |s|
     "README.markdown"
   ]
   s.files = [
-    ".gitignore",
+    ".document",
+     ".gitignore",
      "README.markdown",
+     "Rakefile",
      "VERSION",
      "bin/rwget",
      "lib/rwget.rb",
