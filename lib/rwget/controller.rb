@@ -78,6 +78,7 @@ class RWGet::Controller
         puts "storing at #{key}"
         @store.put(key, tmpfile)
         sleep options[:wait]
+        tmpfile.close rescue nil
       else
         puts "unable to download"
       end  
