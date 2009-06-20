@@ -102,6 +102,11 @@ class RWGetOptionParser < OptionParser
         options[:seeds] << url
         options[:links_class] = "RWGet::SitemapLinks"
       end
+      
+      opts.on("-V", "--version") do
+        puts File.read(File.dirname(__FILE__) + "/../../VERSION")
+        exit
+      end
   
       opts.on("-Q", "--quota=NUMBER", "set retrieval quota to NUMBER.") do |q|
         options[:quota] = q.to_i
