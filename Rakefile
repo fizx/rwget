@@ -12,7 +12,7 @@ begin
     gem.add_dependency("curb", ["> 0.0.0"])
     gem.add_dependency("hpricot", ["> 0.0.0"])
     gem.add_dependency("fizx-robots", [">= 0.3.1"])
-    gem.add_dependency("bloomfilter", ["> 0.0.0"])
+    gem.add_dependency("igrigorik-bloomfilter", ["> 0.0.0"])
     gem.add_dependency("libxml-ruby", ["> 0.9"])
   end
 rescue LoadError
