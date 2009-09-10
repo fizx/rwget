@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rwget}
-  s.version = "0.5.2"
+  s.version = "0.5.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Kyle Maxwell"]
@@ -69,20 +69,20 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<curb>, ["> 0.0.0"])
       s.add_runtime_dependency(%q<hpricot>, ["> 0.0.0"])
       s.add_runtime_dependency(%q<fizx-robots>, [">= 0.3.1"])
-      s.add_runtime_dependency(%q<bloomfilter>, ["> 0.0.0"])
+      s.add_runtime_dependency(%q<igrigorik-bloomfilter>, ["> 0.0.0"])
       s.add_runtime_dependency(%q<libxml-ruby>, ["> 0.9"])
     else
       s.add_dependency(%q<curb>, ["> 0.0.0"])
       s.add_dependency(%q<hpricot>, ["> 0.0.0"])
       s.add_dependency(%q<fizx-robots>, [">= 0.3.1"])
-      s.add_dependency(%q<bloomfilter>, ["> 0.0.0"])
+      s.add_dependency(%q<igrigorik-bloomfilter>, ["> 0.0.0"])
       s.add_dependency(%q<libxml-ruby>, ["> 0.9"])
     end
   else
     s.add_dependency(%q<curb>, ["> 0.0.0"])
     s.add_dependency(%q<hpricot>, ["> 0.0.0"])
     s.add_dependency(%q<fizx-robots>, [">= 0.3.1"])
-    s.add_dependency(%q<bloomfilter>, ["> 0.0.0"])
+    s.add_dependency(%q<igrigorik-bloomfilter>, ["> 0.0.0"])
     s.add_dependency(%q<libxml-ruby>, ["> 0.9"])
   end
 end
