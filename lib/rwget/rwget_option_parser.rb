@@ -50,10 +50,6 @@ class RWGetOptionParser < OptionParser
         options[:reject_patterns] ||= []
         options[:reject_patterns] << Regexp.new(r)
       end
-
-      opts.on("--require=RUBY_SCRIPT", "Will execute 'require RUBY_SCRIPT'") do |s|
-        require s
-      end
   
       opts.on("--limit-rate=RATE", "limit download rate to RATE.") do |r|
         rate = r.to_i
@@ -75,23 +71,27 @@ class RWGetOptionParser < OptionParser
         options[:proxy_password] = p
       end
   
-      opts.on("--fetch-class=RUBY_CLASS", "Must implement fetch(uri, user_agent_string) #=> [final_redirected_url, file_object]") do |c|
+      opts.on("--require=RUBY_SCRIPT", "Will execute 'require RUBY_SCRIPT'") do |s|
+        require s
+      end
+
+      opts.on("--fetch-class=RUBY_CLASS", "Must implement fetch(uri, user_agent_string) #=> [final_redirected_url, file_object] (Load the class with --require)") do |c|
         options[:fetch_class] = c
       end
   
-      opts.on("--store-class=RUBY_CLASS", "Must implement put(key_string, temp_file)") do |c|
+      opts.on("--store-class=RUBY_CLASS", "Must implement put(key_string, temp_file) (Load the class with --require)") do |c|
         options[:store_class] = c
       end
   
-      opts.on("--dupes-class=RUBY_CLASS", "Must implement dupe?(uri)") do |c|
+      opts.on("--dupes-class=RUBY_CLASS", "Must implement dupe?(uri) (Load the class with --require)") do |c|
         options[:dupes_class] = c
       end
   
-      opts.on("--queue-class=RUBY_CLASS", "Must implement put(key_string, depth_int) and get() #=> [key_string, depth_int]") do |c|
+      opts.on("--queue-class=RUBY_CLASS", "Must implement put(key_string, depth_int) and get() #=> [key_string, depth_int] (Load the class with --require)") do |c|
         options[:queue_class] = c
       end
   
-      opts.on("--queue-class=RUBY_CLASS", "Must implement put(key_string, depth_int) and get() #=> [key_string, depth_int]") do |c|
+      opts.on("--queue-class=RUBY_CLASS", "Must implement put(key_string, depth_int) and get() #=> [key_string, depth_int] (Load the class with --require)") do |c|
         options[:queue_class] = c
       end
   

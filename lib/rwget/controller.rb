@@ -103,12 +103,13 @@ class RWGet::Controller
   
   def key_for(uri)
     arr = []
-    arr << options[:prefix]     if options[:prefix]
-    arr << @start_time        if options[:timestampize]
-    arr << uri.scheme           if options[:protocol_directories]
-    arr << uri.host             unless options[:no_host_directories]
+    arr << options[:prefix]           if options[:prefix]
+    arr << @start_time                if options[:timestampize]
+    arr << uri.scheme                 if options[:protocol_directories]
+    arr << uri.host                   unless options[:no_host_directories]
     paths = uri.path.split("/")
-    paths.shift                 if paths.first.to_s.empty?
+    paths << paths.pop + "?" + uri.query     if uri.query
+    paths.shift                       if paths.first.to_s.empty?
     File.join(arr + paths)
   end
   
